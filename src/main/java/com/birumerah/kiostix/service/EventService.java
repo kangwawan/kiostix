@@ -23,9 +23,9 @@ public class EventService {
 		
 	}	
 
-	public static void main(String[] arg){
-		EventService s = new EventService();
-		s.getEvents();
-	}
+//	public static void main(String[] arg){
+//		EventService s = new EventService();
+//		s.getEvents();
+//	}
 
 }
