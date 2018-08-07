@@ -1,0 +1,4 @@
+2018-Aug-07 13:01:08.680 INFO  [main] c.b.k.Application - Starting Application on ISID-ID-NB01 with PID 6264 (C:\dev\project\mybatis-auth2\kiostix\target\classes started by User in C:\dev\project\mybatis-auth2\kiostix)
+2018-Aug-07 13:01:08.683 DEBUG [main] c.b.k.Application - Running with Spring Boot v1.5.8.RELEASE, Spring v4.3.12.RELEASE
+2018-Aug-07 13:01:08.685 INFO  [main] c.b.k.Application - No active profile set, falling back to default profiles: default
+2018-Aug-07 13:01:25.485 INFO  [main] c.b.k.Application - Started Application in 18.29 seconds (JVM running for 35.396)
