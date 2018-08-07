@@ -25,7 +25,7 @@ public class TicketService {
 
 	
 	public String getTicket(Map paramMap){
-		logger.debug(">>call getSchedulesByEventId");
+		logger.debug(">>call getTicket");
 
 		LoginService login = new LoginService();
 		Map loginMap = new HashMap();
