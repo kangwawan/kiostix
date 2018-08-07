@@ -29,9 +29,23 @@ public class TicketController {
 
     //paramMap = {"order_no":12345678910}
     @ResponseBody
-    @RequestMapping(value = "/redeem", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/redeemticket", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
     public String redeemTicket (@RequestBody Map paramMap) throws BusinessException {
     	return service.redeemTicket(paramMap);
     }
     
+    //paramMap = {"order_no":12345678910}
+    @ResponseBody
+    @RequestMapping(value = "/redeem", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+    public String redeem(@RequestBody Map paramMap) throws BusinessException {
+    	return service.redeem(paramMap);
+    }
+
+    //paramMap = {"order_no":12345678910}
+    @ResponseBody
+    @RequestMapping(value = "/redeemconfirm", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+    public String redeemConfirmation(@RequestBody Map paramMap) throws BusinessException {
+    	return service.redeemConfirmation(paramMap);
+    }
+   
 }

@@ -20,7 +20,11 @@ public class TicketService {
 	
 	private String TICKET_URL = "http://devapi.kiostix.com/transaction/quota";
 
-	private String REDEEM_URL = "http://devapi.kiostix.com/tickets/ticketReedem";
+	private String TICKET_REDEEM_URL = "http://devapi.kiostix.com/tickets/ticketReedem";
+
+	private String REDEEM_URL = "http://devapi.kiostix.com/tickets/redeem";
+
+	private String REDEEM_CONFIRM_URL = "http://devapi.kiostix.com/tickets/redeemConfirmation";
 	
     @Autowired
     private LoginService loginService;
@@ -49,16 +53,22 @@ public class TicketService {
 	public String redeemTicket(Map paramMap){
 		logger.debug(">>call redeemTicket");
 
+		return exec.executePOST(TICKET_REDEEM_URL, paramMap, authKey);
+		
+	}	
+
+	public String redeem(Map paramMap){
+		logger.debug(">>call redeem");
+
 		return exec.executePOST(REDEEM_URL, paramMap, authKey);
 		
 	}	
 	
-//	public static void main(String[] args){
-//		TicketService ticket = new TicketService();
-//		Map paramTicket = new HashMap();
-//		paramTicket.put("schedule_id", "pw23771apa");
-//		
-//		ticket.getTicket(paramTicket);
-//	}
+	public String redeemConfirmation(Map paramMap){
+		logger.debug(">>call redeem");
+
+		return exec.executePOST(REDEEM_CONFIRM_URL, paramMap, authKey);
+		
+	}	
 
 }
