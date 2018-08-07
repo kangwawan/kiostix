@@ -76,6 +76,31 @@ public class RestExecutor {
 		return jsonReturn;
 	}
 
+	public Object executePOSTwithCasting(String endPoint, Object params, String secretKey, String className) throws Exception{
+		
+		Gson gson = new Gson();
+		String jsonParams = gson.toJson(params);
+		logger.debug(">>> jsonParams : "+jsonParams);
+		
+		CloseableHttpClient httpClient = HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+		requestFactory.setHttpClient(httpClient);
+		RestTemplate restTemplate = new RestTemplate(requestFactory);
+	
+		HttpHeaders requestHeaders = new HttpHeaders();
+		requestHeaders.set("Content-Type", "application/json");
+		requestHeaders.set("Authorization", secretKey);
+		HttpEntity<?> httpEntity = new HttpEntity<Object>(jsonParams, requestHeaders);
+		
+		Object result = restTemplate.exchange(endPoint, HttpMethod.POST, httpEntity, Object.class);
+		ObjectMapper m = new ObjectMapper();
+		Map resultMap = m.convertValue(result, Map.class);
+		Object body = resultMap.get("body");
+		logger.debug(">> body : "+body);
+		return m.convertValue(body, Class.forName(className));
+	}
+	
+	
 	public ResponseLoginDTO loginPOST(String endPoint, Object params, String secretKey){
 		
 		Gson gson = new Gson();
