@@ -19,10 +19,14 @@ public class TicketService {
 	private String authKey = "a2lvc3RpeEFQSTAxMDMwNDIwMTg=";
 	
 	private String TICKET_URL = "http://devapi.kiostix.com/transaction/quota";
+
+	private String REDEEM_URL = "http://devapi.kiostix.com/tickets/ticketReedem";
 	
     @Autowired
     private LoginService loginService;
 
+    @Autowired
+    private RestExecutor exec;
 	
 	public String getTicket(Map paramMap){
 		logger.debug(">>call getTicket");
@@ -37,8 +41,15 @@ public class TicketService {
 		paramTicket.add("token", token);
 		paramTicket.add("schedule_id", (String) paramMap.get("schedule_id"));
 		
-		RestExecutor exec = new RestExecutor();
+		//RestExecutor exec = new RestExecutor();
 		return exec.executeFormDataPOST(TICKET_URL, paramTicket, authKey);
+		
+	}	
+
+	public String redeemTicket(Map paramMap){
+		logger.debug(">>call redeemTicket");
+
+		return exec.executePOST(REDEEM_URL, paramMap, authKey);
 		
 	}	
 	

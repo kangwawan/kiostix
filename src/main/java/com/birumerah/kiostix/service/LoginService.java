@@ -21,7 +21,7 @@ public class LoginService {
 	private String LOGIN_URL = "http://devapi.kiostix.com/login";
 	
 	public ResponseLoginDTO login(Map paramMap){
-		logger.debug(">>call getSchedulesByEventId");
+		logger.debug(">>call login");
 		
 		RestExecutor exec = new RestExecutor();
 		return exec.loginPOST(LOGIN_URL, paramMap, authKey);
