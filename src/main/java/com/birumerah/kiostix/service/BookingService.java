@@ -1,5 +1,7 @@
 package com.birumerah.kiostix.service;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,8 @@ import com.birumerah.kiostix.dto.PaymentDetailDTO;
 import com.birumerah.kiostix.dto.ResponseBookingDTO;
 import com.birumerah.kiostix.dto.TransactionDetailDTO;
 import com.birumerah.kiostix.helper.RestExecutor;
+import com.birumerah.kiostix.mapper.BookingMapper;
+import com.birumerah.kiostix.model.Bookings;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service("bookingService")
@@ -22,6 +26,7 @@ public class BookingService {
 	
 	private String authKey = "a2lvc3RpeEFQSTAxMDMwNDIwMTg=";
 	
+	private String HOSTNAME = "http://devapi.kiostix.com";
 	private String BOOKING_URL = "http://devapi.kiostix.com/transaction/booking";
 	private String PAY_BOOKING_URL = "http://devapi.kiostix.com/transaction/pay";
 	
@@ -30,7 +35,10 @@ public class BookingService {
 
     @Autowired
     private RestExecutor exec;
-    
+
+	@Autowired
+	private BookingMapper bookingMapper;
+  
 	public String addBooking(Map paramMap){
 		logger.debug(">>call addBooking");
 
@@ -38,26 +46,31 @@ public class BookingService {
 		ResponseBookingDTO bookingResponse = null;
 		String responseStr = null;
 		String token = null;
-		
+		boolean isReachable = false;
+		Bookings booking = null;
+				
 		//Login to get token
 		LoginService login = new LoginService();
 		Map loginMap = new HashMap();
 		
 		try {
+			ObjectMapper converter = new ObjectMapper();
+			booking = converter.convertValue(paramMap, Bookings.class);
+			
 			loginMap.put("email", "tbpos1@kiostix.com");
 			loginMap.put("password", "admin123");
 			token = login.login(loginMap).getData().getToken();
 
 			paramMap.put("token", token);
 			bookingResponse = (ResponseBookingDTO) exec.executePOSTwithCasting(BOOKING_URL, paramMap, authKey, ResponseBookingDTO.class.getName());
-			//ObjectMapper m = new ObjectMapper();
-			//bookingResponse = m.convertValue(bookingBody, ResponseBookingDTO.class);
 
 			List<DataBookingDTO> dataList = bookingResponse.getData();
 			DataBookingDTO data = dataList.get(0);
 			if(data!=null){
 				TransactionDetailDTO transaction = data.getTransaction_detail();
 				String orderNo = transaction.getOrder_no();
+				
+				booking.setOrderNo(orderNo);
 				
 				List<PaymentDetailDTO> paymentList = data.getPayment_detail();
 				for(PaymentDetailDTO payment : paymentList){
@@ -79,9 +92,21 @@ public class BookingService {
 				}
 			}
 			
+			booking.setOffline(false);
+			
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			logger.debug(">>> Error-UnknownHostException : "+e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.debug(">>> Error-IOException : "+e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.debug(">>> Error : "+e.getMessage());
+			logger.debug(">>> Error-Exception : "+e.getMessage());
+		} finally{
+			if(booking!=null){
+				bookingMapper.insertUser(booking);
+			}
 		}
 		return responseStr;
 	}	
@@ -94,6 +119,7 @@ public class BookingService {
 		
 	}
 	
+	
 //	public static void main(String[] args){
 //		BookingService booking = new BookingService();
 //		String paramStr = "{\"item\":{\"pw934umzpl\":\"2\"},\"time\":\"pwz377bzpl\",\"name\":\"Test API\",\"email\":\"apidev@kiostix.io\",\"gender\":\"Male\",\"phone\":\"085814174847\",\"dob\":\"1996-03-06\"}";		
@@ -102,6 +128,8 @@ public class BookingService {
 //		Map paramMap = m.convertValue(gson.toJson(paramStr), Map.class);
 //
 //		booking.addBooking(paramMap);
+		//logger.debug(">>> isReachable : "+HostStatusChecker.isHostReachable("devapi.kiostix.com"));
+
 //	}
 	
 }

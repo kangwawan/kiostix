@@ -22,7 +22,6 @@ public class BookingController {
 	
 	/*paramMap=
 		{
-		  "token":"{{token}}",
 		  "item":{
 		    "pw934umzpl":"2"
 		  },
