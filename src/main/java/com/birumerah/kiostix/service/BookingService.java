@@ -34,20 +34,21 @@ public class BookingService {
 	public String addBooking(Map paramMap){
 		logger.debug(">>call addBooking");
 
-		//Login to get token
-		LoginService login = new LoginService();
-		Map loginMap = new HashMap();
-		loginMap.put("email", "tbpos1@kiostix.com");
-		loginMap.put("password", "admin123");
-		String token = login.login(loginMap).getData().getToken();
-
-		paramMap.put("token", token);
-		
-		//RestExecutor exec = new RestExecutor();
 		Object bookingBody = null;
 		ResponseBookingDTO bookingResponse = null;
 		String responseStr = null;
+		String token = null;
+		
+		//Login to get token
+		LoginService login = new LoginService();
+		Map loginMap = new HashMap();
+		
 		try {
+			loginMap.put("email", "tbpos1@kiostix.com");
+			loginMap.put("password", "admin123");
+			token = login.login(loginMap).getData().getToken();
+
+			paramMap.put("token", token);
 			bookingResponse = (ResponseBookingDTO) exec.executePOSTwithCasting(BOOKING_URL, paramMap, authKey, ResponseBookingDTO.class.getName());
 			//ObjectMapper m = new ObjectMapper();
 			//bookingResponse = m.convertValue(bookingBody, ResponseBookingDTO.class);

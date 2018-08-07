@@ -48,4 +48,10 @@ public class TicketController {
     	return service.redeemConfirmation(paramMap);
     }
    
+    //paramMap = {"ticket_id":"pac34umzpl"}
+    @ResponseBody
+    @RequestMapping(value = "/transaction", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+    public String ticketTransaction(@RequestBody Map paramMap) throws BusinessException {
+    	return service.ticketTransaction(paramMap);
+    }
 }
