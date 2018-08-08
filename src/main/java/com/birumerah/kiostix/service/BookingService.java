@@ -92,15 +92,15 @@ public class BookingService {
 				}
 			}
 			
-			booking.setOffline(false);
+			booking.setOnline(true);
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-			booking.setOffline(true);
+			booking.setOnline(false);
 			logger.debug(">>> Error-UnknownHostException : "+e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
-			booking.setOffline(true);
+			booking.setOnline(false);
 			logger.debug(">>> Error-IOException : "+e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();

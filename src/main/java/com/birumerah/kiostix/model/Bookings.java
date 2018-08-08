@@ -23,7 +23,7 @@ public class Bookings {
 	private String notes1;
 	private String notes2;
 	private String notes3;
-	private boolean offline;
+	private boolean online;
 	public Long getId() {
 		return id;
 	}
@@ -132,11 +132,11 @@ public class Bookings {
 	public void setNotes3(String notes3) {
 		this.notes3 = notes3;
 	}
-	public boolean isOffline() {
-		return offline;
+	public boolean isOnline() {
+		return online;
 	}
-	public void setOffline(boolean offline) {
-		this.offline = offline;
+	public void setOnline(boolean online) {
+		this.online = online;
 	}
 //	public Object getItem() {
 //		return item;
