@@ -96,9 +96,11 @@ public class BookingService {
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
+			booking.setOffline(true);
 			logger.debug(">>> Error-UnknownHostException : "+e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
+			booking.setOffline(true);
 			logger.debug(">>> Error-IOException : "+e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
