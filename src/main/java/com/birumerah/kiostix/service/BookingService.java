@@ -93,6 +93,7 @@ public class BookingService {
 			}
 			
 			booking.setOnline(true);
+			booking.setToken(token);
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
