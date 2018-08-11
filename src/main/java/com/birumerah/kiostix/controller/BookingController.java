@@ -38,5 +38,11 @@ public class BookingController {
     public String findTicket (@RequestBody Map paramMap) throws BusinessException {
     	return service.addBooking(paramMap);
     }
-	
+
+    @ResponseBody
+    @RequestMapping(value = "/savevoucher", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+    public Map<String,Object> saveVoucher (@RequestBody Map paramMap) throws BusinessException {
+    	return service.saveVoucher(paramMap);
+    }
+    
 }

@@ -18,6 +18,7 @@ import com.birumerah.kiostix.dto.TransactionDetailDTO;
 import com.birumerah.kiostix.helper.RestExecutor;
 import com.birumerah.kiostix.mapper.BookingMapper;
 import com.birumerah.kiostix.model.Bookings;
+import com.birumerah.kiostix.model.Redeems;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service("bookingService")
@@ -38,7 +39,9 @@ public class BookingService {
 
 	@Autowired
 	private BookingMapper bookingMapper;
-  
+
+	private Map<String,Object> resultMap = null;
+	
 	public String addBooking(Map paramMap){
 		logger.debug(">>call addBooking");
 
@@ -108,7 +111,7 @@ public class BookingService {
 			logger.debug(">>> Error-Exception : "+e.getMessage());
 		} finally{
 			if(booking!=null){
-				bookingMapper.insertUser(booking);
+				bookingMapper.insertBooking(booking);
 			}
 		}
 		return responseStr;
@@ -122,6 +125,35 @@ public class BookingService {
 		
 	}
 	
+	public Map<String,Object> saveVoucher(Map paramMap){
+		logger.debug(">>call saveVoucher");
+		resultMap = new HashMap<String,Object>();
+
+		Object bookingBody = null;
+		ResponseBookingDTO bookingResponse = null;
+		String responseStr = null;
+		String token = null;
+		boolean isReachable = false;
+		Redeems redeem = null;
+				
+		try {
+			ObjectMapper converter = new ObjectMapper();
+			redeem = converter.convertValue(paramMap, Redeems.class);
+			
+			bookingMapper.insertVoucher(redeem);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("error : "+e.getMessage());
+			resultMap.put("status", 500);
+			resultMap.put("message", e.getMessage());
+		}
+		if(!resultMap.containsKey("error")){
+			resultMap.put("status", 200);
+			resultMap.put("message", "Save voucher is success!");
+		}
+		return resultMap;
+	}	
 	
 //	public static void main(String[] args){
 //		BookingService booking = new BookingService();
