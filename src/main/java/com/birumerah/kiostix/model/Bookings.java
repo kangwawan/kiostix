@@ -1,12 +1,12 @@
 package com.birumerah.kiostix.model;
 
+import java.util.Iterator;
 import java.util.Map;
 
 public class Bookings {
 	private Long id;
 	private String token;
-	//private Map<String,String> item;
-	private Item item;
+	private Map<String,String> item;
 	private String itemNo;
 	private Integer itemQty;
 	private String time;
@@ -138,32 +138,20 @@ public class Bookings {
 	public void setOnline(boolean online) {
 		this.online = online;
 	}
-	public Item getItem() {
-		return item;
-	}
-	//public void setItem(Map<String,String> item) {
-	public void setItem(Item item) {
+//	public Object getItem() {
+//		return item;
+//	}
+	public void setItem(Map<String,String> item) {
 		this.item = item;
 		if(item!=null){
-//			Iterator iter = item.keySet().iterator();
-//		    while (iter.hasNext()) {
-//		    	String key = (String) iter.next();
-//				this.itemNo = key;
-//				this.itemQty = Integer.parseInt(item.get(key));
-//			}
-			this.itemNo = item.id;
-			this.itemQty = Integer.parseInt(item.qty);
-			
+			Iterator iter = item.keySet().iterator();
+		    while (iter.hasNext()) {
+		    	String key = (String) iter.next();
+				this.itemNo = key;
+				this.itemQty = Integer.parseInt(item.get(key));
+			}
 		}
 		
 	}
 	
-	public class Item{
-		public String id;
-		public String qty;
-	}
-	
 }
-
-
-

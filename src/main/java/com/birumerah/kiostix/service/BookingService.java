@@ -3,12 +3,14 @@ package com.birumerah.kiostix.service;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.birumerah.kiostix.dto.DataBookingDTO;
@@ -25,11 +27,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class BookingService {
 	private static final Logger logger = LoggerFactory.getLogger(BookingService.class);
 	
-	private String authKey = "a2lvc3RpeEFQSTAxMDMwNDIwMTg=";
+	//@Value("${kiostix.authkey}")
+	private String authKey  = "a2lvc3RpeEFQSTAxMDMwNDIwMTg=";
 	
+//	@Value("${kiostix.hostname}")
 	private String HOSTNAME = "http://devapi.kiostix.com";
+
+//	@Value("${kiostix.transaction.booking}")
 	private String BOOKING_URL = "http://devapi.kiostix.com/transaction/booking";
+
+//	@Value("${kiostix.transaction.pay}")
 	private String PAY_BOOKING_URL = "http://devapi.kiostix.com/transaction/pay";
+
+//	@Value("${kiostix.login.email}")
+	private String EMAIL_LOGIN = "Merahbiru@kiostix.com";
+
+//	@Value("${kiostix.login.password}")
+	private String PASSWORD_LOGIN = "asdasd";
 	
     @Autowired
     private LoginService loginService;
@@ -51,7 +65,8 @@ public class BookingService {
 		String token = null;
 		boolean isReachable = false;
 		Bookings booking = null;
-				
+		Map<String,Object> bookingParamMap = new HashMap<String,Object>(); 
+		
 		//Login to get token
 		LoginService login = new LoginService();
 		Map loginMap = new HashMap();
@@ -60,12 +75,40 @@ public class BookingService {
 			ObjectMapper converter = new ObjectMapper();
 			booking = converter.convertValue(paramMap, Bookings.class);
 			
-			loginMap.put("email", "tbpos1@kiostix.com");
-			loginMap.put("password", "admin123");
+//			loginMap.put("email", "tbpos1@kiostix.com");
+//			loginMap.put("password", "admin123");
+			loginMap.put("email", EMAIL_LOGIN);
+			loginMap.put("password", PASSWORD_LOGIN);
 			token = login.login(loginMap).getData().getToken();
 
 			paramMap.put("token", token);
+			//begin: 20180816 to apply change of json param on kiostix 
+			bookingParamMap = paramMap;
+			Map<String,Integer> item = (Map<String,Integer>) paramMap.get("item");
+			paramMap.remove("item");
+			paramMap.remove("photo1");
+			paramMap.remove("photo2");
+			paramMap.remove("amount");
+			paramMap.remove("paymentType");
+			paramMap.remove("notes1");
+			paramMap.remove("notes2");
+			paramMap.remove("notes3");
+
+			Map<String,Object> newItemMp = new HashMap<String,Object>();
+			if(item != null){
+				Iterator iter = item.keySet().iterator();
+			    while (iter.hasNext()) {
+			    	String key = (String) iter.next();
+					newItemMp.put("id", key);
+					newItemMp.put("qty", item.get(key));
+				}
+			}
+			paramMap.put("item",newItemMp);
+			//logger.debug(">>> json param to kiostix : "+converter.readValue(bookingParamMap, String.class));
+			//end
+			
 			bookingResponse = (ResponseBookingDTO) exec.executePOSTwithCasting(BOOKING_URL, paramMap, authKey, ResponseBookingDTO.class.getName());
+			//bookingResponse = (ResponseBookingDTO) exec.executePOSTwithCasting(BOOKING_URL, bookingParamMap, authKey, ResponseBookingDTO.class.getName());
 
 			List<DataBookingDTO> dataList = bookingResponse.getData();
 			DataBookingDTO data = dataList.get(0);
