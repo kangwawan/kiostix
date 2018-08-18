@@ -9,7 +9,8 @@ public class TransactionDetailDTO {
     private Double order_total; //22222,
     private VenueDetailDTO venue_details; 
     private CustomerDetailDTO customer_details; 
-    private List<ItemDetailDTO> item_details; 
+    //private List<ItemDetailDTO> item_details; 
+    private ItemDetailDTO item_details; 
     private String expired_date;
 	public String getOrder_no() {
 		return order_no;
@@ -47,10 +48,12 @@ public class TransactionDetailDTO {
 	public void setCustomer_details(CustomerDetailDTO customer_details) {
 		this.customer_details = customer_details;
 	}
-	public List<ItemDetailDTO> getItem_details() {
+	//public List<ItemDetailDTO> getItem_details() {
+	public ItemDetailDTO getItem_details() {
 		return item_details;
 	}
-	public void setItem_details(List<ItemDetailDTO> item_details) {
+	//public void setItem_details(List<ItemDetailDTO> item_details) {
+	public void setItem_details(ItemDetailDTO item_details) {
 		this.item_details = item_details;
 	}
 	public String getExpired_date() {
